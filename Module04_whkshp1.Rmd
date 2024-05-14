@@ -259,6 +259,11 @@ ggplot(data = <DATA>) +
 stuff i found wrong in the plot
 shapes not seen, colors hard to tell the difference
 
+- look at each year on facet each on out
+- use smooth geom
+- have to figure out the depth an temperature
+
+
   
   
   
