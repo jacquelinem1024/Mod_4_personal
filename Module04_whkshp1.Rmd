@@ -257,11 +257,13 @@ ggplot(data = <DATA>) +
 ### ASSIGNEMENT: Plot Deconstruction
 
 stuff i found wrong in the plot
-shapes not seen, colors hard to tell the difference
+could combine them and make them different colors
 
-- look at each year on facet each on out
-- use smooth geom
-- have to figure out the depth an temperature
+extraxt data using website
+saved as csvs
+copied csv in excel then tidyied in excel
+then upload in R 
+Bar
 
 
   
