@@ -10,3 +10,10 @@ output: html_document
 The data wrangling component of a data science workflow can often take up to 50-80% of total time one may spend on a project. 
 
 Tibbles: are used in place of the traditional data familiar frames like tidyr package. Tibbles are basically a data frame. They are slightly adjusted dataframes which were designed to keep up with recent advances in R.
+
+In this section, you will be introduced to tidy data and the accompanying tools in the tidyr package. tidyr is part of the core tidyverse, which you should now be quite familiar with. Before starting this section, make sure the tidyverse is loaded.
+
+```r
+library(tidyverse)
+```
+
