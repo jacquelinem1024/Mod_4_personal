@@ -1,7 +1,7 @@
 ---
-title: "Workshop_3_data_wrangling_r"
+title: "MB5370 MOdule 04: Workshop3 Data Wwrangling"
 author: "Jacqueline Hintz"
-date: "`r Sys.Date()`"
+date: "2024-05-16"
 output: html_document
 ---
 
@@ -16,4 +16,8 @@ In this section, you will be introduced to tidy data and the accompanying tools 
 ```r
 library(tidyverse)
 ```
+
+why do we care about having tidy data? We said before, tidy data is useful data and here’s why: 
+Having a consistent data structure makes it easier to learn the tools that work with it, and 
+Having your variables in columns allows R to use its ability to work with vectors of values. This makes transforming tidy data a smoother process.
 
