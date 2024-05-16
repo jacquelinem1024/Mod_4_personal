@@ -10,16 +10,60 @@ Went into Qish website.
 picked the Shark Program nu,ber by caught by area, calender year and species group dataset that offers a data tbale by region, year and species. 
 
 #Imported QFISH dataset
-```r
+
 library(readr)
 > QFISH <- read_csv("data/QFISH.csv")
-```
+
 # Tidying Data
 The table has the years along the top if the table and we need them on the sides. We need to pivot the columns and rows to make it tidy
 
 
 In excel I tidy some of the columns, and rows. I deleted the grand total and fixed some random little things to make sure R can read it.
-```r
-library(readxl)
-QFISH <- read_excel("data/QFISH.xlsx")
+
+QFISH <- read_csv("data/QFISH1.csv")
+
+
+Now we want to make the rows the columns like catcg, calender year 
+QFISH |>
+  pivot_longer(
+  cols = starts_with("Area")
+  )
+  
+
+```{r}
+yr2001 <- QFISH |> # selected year 2001 first to start with
+  select(Area, starts_with("2001"))
+
+colnames(yr2001) <- unlist(yr2001[1,]) # removes repeated row  (first row- year)
+
+yr2001 <-
+  yr2001 |>
+  slice(-1) |> # removes catch row?
+  rename(Area = Catch) # replaced Catch header with Area
+
+    
+```
+
+```{r}
+yr2002 <- QFISH |> # selected year 2002 first to start with
+  select(Area, starts_with("2002"))
+
+colnames(yr2002) <- unlist(yr2002[1,]) # removes repeated row  (first row -year)
+
+yr2002 <-
+  yr2002 |>
+  slice(-1) |> # removes catch row?
+  rename(Area = Catch) # replaced Catch header with Area
+```
+
+```{r}
+yr2003 <- QFISH |>
+  select(Area, starts_with("2003"))
+
+colnames(yr2003) <- unlist(yr2003[1,])
+ 
+yr2003 <- 
+  yr2003 |> 
+  slice(-1) |>
+  rename(Area = Catch)
 ```
