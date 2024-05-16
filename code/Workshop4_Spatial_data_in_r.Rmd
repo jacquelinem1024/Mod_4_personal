@@ -25,5 +25,77 @@ library(tmap) # Thematic maps are geographical maps in which spatial data distri
 ```
 
 #task now is - using R - to make a map of copepods in relation to temperature
+```{r}
+#load the copepod data into R studio
+library(readr)
+dat <- read_csv("data-for-course/copepods_raw.csv")
+dat
+```
+
+# notice here the  silk_id column, which is just the ID for each of the silks, onto which plankton are recorded
+
+# Data exploration
+```{r}
+library(ggplot2)
+ggplot(dat) + 
+  aes(x = longitude, y = latitude, color = richness_raw) +
+  geom_point()
+```
+
+#it should show the location of every segment and color the points by species richness. notice that the x and y. It is not a map!
+
+#now lets look at data richness
+```{r}
+ggplot(dat, aes(x = latitude, y = richness_raw)) + 
+  stat_smooth() + 
+  geom_point()
+```
+
+#Something look odd with this graph. Unnatural pattern at about latitude -40. This would be the point in time to talk with your collaborator to try and work out whts going on,
+
+#Getting going with maps
+#First, we will turn our point data into a spatially referenced data frame using the sf package (sf stands for ‘simple features’) which is an open standard for geospatial databases. For those that think in GIS, you can think of this format as a shapefile or feature collection.
+
+```{r}
+sdat <- st_as_sf(dat, coords = c("longitude", "latitude"), crs = 4326)
+```
+
+# this turned our data into simple feature collection
+#As is good practice (that I hope you’re learned by now!) use ?st_as_sf to see what else it can convert and what all these arguments mean.
+#st_as_sf converts different data types to simple features. 
+#dat is our original data. 
+#coords gives the names of the columns that relate to the spatial coordinates (in order of X coordinate followed by Y coordinate).
+#crs stands for coordinate reference system which we will discuss next.
+
+
+#Coordinate referance system: is a short- hand code for a specific coordinate referance system (CRS)
+#crs we are using is crs.  For example, for the EPSG code 4326 we can find out: 1) what the name of this crs is, 2) the corresponding proj4string, and 3) the WKT (WKT is a string that contains all of the detailed info we need to define a crs)
+
+```{r}
+crs4326 <- st_crs(4326)
+crs4326 #look at the whole CRS
+crs4326$Name #pull out just the name of the crs
+[1] "WGS 84"
+crs4326$wkt # crs in well-known text format
+```
+
+
+```{r}
+sdat
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
