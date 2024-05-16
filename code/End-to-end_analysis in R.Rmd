@@ -12,5 +12,14 @@ picked the Shark Program nu,ber by caught by area, calender year and species gro
 #Imported QFISH dataset
 ```r
 library(readr)
-> Shark_control_program <- read_csv("data/Shark_control_program.csv")
+> QFISH <- read_csv("data/QFISH.csv")
+```
+# Tidying Data
+The table has the years along the top if the table and we need them on the sides. We need to pivot the columns and rows to make it tidy
+
+
+In excel I tidy some of the columns, and rows. I deleted the grand total and fixed some random little things to make sure R can read it.
+```r
+library(readxl)
+QFISH <- read_excel("data/QFISH.xlsx")
 ```
