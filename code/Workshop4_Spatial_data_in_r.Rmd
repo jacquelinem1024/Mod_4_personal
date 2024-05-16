@@ -1,6 +1,29 @@
 ---
 title: "Workshop4_Spatial_data_in_r"
 author: "Jacqueline Hintz"
-date: "`r Sys.Date()`"
+date: "2024-05-17"
 output: html_document
 ---
+
+### Workshop 4: Spatial data inR
+
+#Install packages
+
+```{r}
+# install and load your packages
+install.packages("sf") 
+install.packages("terra")
+install.packages("tmap")
+
+
+#load into R library
+library(tidyverse)
+library(sf) # simple features
+library (terra) # for raster
+library(tmap) # Thematic maps are geographical maps in which spatial data distributions are visualized
+
+```
+
+#task now is - using R - to make a map of copepods in relation to temperature
+
+
