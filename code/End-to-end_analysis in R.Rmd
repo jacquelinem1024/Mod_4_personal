@@ -24,7 +24,7 @@ QFISH <- read_csv("data/QFISH1.csv")
 
 
 Now we want to make the rows the columns like catch and calender year 
-
+Starting with year 2001.
 ```{r}
 yr2001 <- QFISH |> # selected year 2001 first to start with
   select(Area, starts_with("2001")) # if errors here put yr2001 infront of Area then comma
@@ -38,6 +38,7 @@ yr2001 <-
   mutate(Year = 2001) # added a year colum
 ```
 
+Next year 2002
 ```{r}
 yr2002 <- QFISH |> # selected year 2002 first to start with
   select(Area, starts_with("2002"))
@@ -51,6 +52,7 @@ yr2002 <-
   mutate(Year = 2002)
 ```
 
+Then 2003
 ```{r}
 yr2003 <- QFISH |>
   select(Area, starts_with("2003"))
@@ -66,13 +68,17 @@ yr2003 <-
 
 
 Now we need to join the tables. row bind
-
 ```{r}
 QFISH_new <- 
   bind_rows(yr2001,yr2002, yr2003)
 ```
 
 
+NOw graph the new QFISH Data.
+```{r}
+ggplot(data = QFISH_new) +
+  geom_point(mapping = aes(x = Year, y = Total, colour = Area))
+```
 
 
 
