@@ -23,25 +23,19 @@ In excel I tidy some of the columns, and rows. I deleted the grand total and fix
 QFISH <- read_csv("data/QFISH1.csv")
 
 
-Now we want to make the rows the columns like catcg, calender year 
-QFISH |>
-  pivot_longer(
-  cols = starts_with("Area")
-  )
-  
+Now we want to make the rows the columns like catch and calender year 
 
 ```{r}
 yr2001 <- QFISH |> # selected year 2001 first to start with
-  select(Area, starts_with("2001"))
+  select(Area, starts_with("2001")) # if errors here put yr2001 infront of Area then comma
 
 colnames(yr2001) <- unlist(yr2001[1,]) # removes repeated row  (first row- year)
 
 yr2001 <-
   yr2001 |>
   slice(-1) |> # removes catch row?
-  rename(Area = Catch) # replaced Catch header with Area
-
-    
+  rename(Area = Catch) |> # replaced Catch header with Area
+  mutate(Year = 2001) # added a year colum
 ```
 
 ```{r}
@@ -53,7 +47,8 @@ colnames(yr2002) <- unlist(yr2002[1,]) # removes repeated row  (first row -year)
 yr2002 <-
   yr2002 |>
   slice(-1) |> # removes catch row?
-  rename(Area = Catch) # replaced Catch header with Area
+  rename(Area = Catch) |> # replaced Catch header with Area
+  mutate(Year = 2002)
 ```
 
 ```{r}
@@ -65,5 +60,22 @@ colnames(yr2003) <- unlist(yr2003[1,])
 yr2003 <- 
   yr2003 |> 
   slice(-1) |>
-  rename(Area = Catch)
+  rename(Area = Catch) |>
+  mutate(Year = 2003)
 ```
+
+
+Now we need to join the tables. row bind
+
+```{r}
+QFISH_new <- 
+  bind_rows(yr2001,yr2002, yr2003)
+```
+
+
+
+
+
+
+
+
