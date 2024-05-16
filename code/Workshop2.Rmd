@@ -1,0 +1,267 @@
+---
+title: "Workshop2_usingggplot_for_comm"
+author: "Jacqueline Hintz"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+### Using ggplot for communication
+
+###Labels: good label on plots help communicate key findings, or even comply with the formatiing requirements of any outlet
+
+#In ggplot2, you add labels with the labs() function. Let’s start with a title.
+
+```r
+ggplot(mpg, aes(displ, hwy)) +
+  geom_point(aes(color = class)) +
+  geom_smooth(se.e = FALSE) +
+  labs(title = "Fuel efficiency generally decreases with engine size")
+
+  ```
+#If you need to add more text, you can use a couple of other functions:subtitle adds additional detail in a smaller font beneath the title and caption adds text at the bottom right of the plot caption adds text at the bottom right of the plot, often used to describe the source of the data.
+
+
+```r
+
+ggplot(mpg, aes(displ, hwy)) +
+  geom_point(aes(color = class)) +
+  geom_smooth(se = FALSE) +
+  labs(
+    title = "Fuel efficiency generally decreases with engine size",
+    subtitle = "Two seaters (sports cars) are an exception because of their light weight",
+    caption = "Data from fueleconomy.gov"
+  )
+
+```
+#You can also use labs() to replace axis labels and legend titles.
+```r
+ggplot(mpg, aes(displ, hwy)) +
+  geom_point(aes(colour = class)) +
+  geom_smooth(se = FALSE) +
+  labs(
+    x = "Engine displacement (L)",
+    y = "Highway fuel economy (mpg)",
+    colour = "Car type"
+  )
+
+```
+## Annotations
+#Here we will filter the data (more to come on this in the next workshop!) and add a label that calls in the values from the data frame. This is really neat, because it allows us to pull data values out (like the most fuel efficient car!) from the data itself and include it in the plot. This is particularly nice when these might change on an update of the data.
+
+```r
+best_in_class <- mpg %>%
+  group_by(class) %>%
+  filter(row_number(desc(hwy)) == 1)
+
+ggplot(mpg, aes(displ, hwy)) +
+  geom_point(aes(colour = class)) +
+  geom_text(aes(label = model), data = best_in_class)
+  ```
+#if labels overlap: then use the nugde() function to move your text a certain amount and using other R packages to handle text wrapping etc
+
+##Scales
+
+#Changing the default scales. Normally, ggplot2 automatically adds scales for you. For example, when you type:
+```r
+ggplot(mpg, aes(displ, hwy)) +
+  geom_point(aes(colour = class))
+  ```
+  
+#ggplot2 automatically adds default scales behind the scenes.
+#However, if you want to tweak them, you can do so by offering values to the scale parameters by adding numbers in the appropriate scale arguments. 
+
+#Remember that to provide limits you’ll need to offer a character vector showing the start and end of your limit (e.g. c(0,12)). Note also that: ?scale_x_continuous() has plenty of other arguments, so don’t forget to explicitly state the argument you’re providing these limits for (e.g. limits = c(0,12)).
+```r
+ggplot(mpg, aes(displ, hwy)) +
++     geom_point(aes(colour = class)) +
++     scale_x_continuous() +
++     scale_y_continuous() +
++     scale_colour_discrete()
+  ```
+  
+### Axis Ticks
+#One can also change the axis tick on the axis. Breaks controls the position of the ticks and you can use labels as an argument to change the text label associated with ticks.
+
+```r
+ggplot(mpg, aes(displ, hwy)) +
+  geom_point() +
+  scale_y_continuous(breaks = seq(15, 40, by = 5))
+  ```
+#Similarly, you can use labels set to NULL to suppress the labels altogether. This is sometimes an option if you’re trying to format your plots in a particular way.
+```r
+ggplot(mpg, aes(displ, hwy)) +
+  geom_point() +
+  scale_x_continuous(labels = NULL) +
+  scale_y_continuous(labels = NULL)
+  ```
+
+### Legands and Colour schemes
+
+#Sometimes you might want to change the position of your legend, perhaps to make the plot itself as wide as possible (e.g. put the legend underneath) or to hide it all together. 
+To control the overall position of the legend, you need to use a theme() setting.
+
+#Run each line separately to see how it changes the plot of “base
+```r
+base <- ggplot(mpg, aes(displ, hwy)) +
+  geom_point(aes(colour = class))
+
+base + theme(legend.position = "left")
+base + theme(legend.position = "top")
+base + theme(legend.position = "bottom")
+base + theme(legend.position = "right") # the default
+```
+#You can also use legend.position = "none" to suppress the display of the legend altogether!
+
+### Replacing a scale
+
+#Two tpyes of scales: continuous postition scales and colour scales. It’s very useful to plot transformations of your variables. For example, as we’ve seen in diamond prices it’s easier to see the precise relationship between carat and price if we log transform them using a ggplot2 function for scale precisely for this purpose.
+
+```r
+ggplot(diamonds, aes(carat, price)) +
+  geom_bin2d() + 
+  scale_x_log10() + 
+  scale_y_log10()
+  ```
+  * using the log scale not conintouous
+  
+#Another scale that is frequently customised is the colour scale. In fact, from a data visualisation point of view, this is among the most important changes you can make to a base ggplot.
+
+```r
+ggplot(mpg, aes(displ, hwy)) +
+  geom_point(aes(color = drv))
+
+ggplot(mpg, aes(displ, hwy)) +
+  geom_point(aes(color = drv)) +
+  scale_colour_brewer(palette = "Set1")
+  ```
+#if there are just a few colours, you can add a redundant shape mapping. This will also help ensure your plot is interpretable in black and white
+  
+```r
+ggplot(mpg, aes(displ, hwy)) +
+  geom_point(aes(color = drv, shape = drv)) +
+  scale_colour_brewer(palette = "Set1")
+  ```
+#changes the data points into different shapes
+  
+#example:http://www.cookbook-r.com/Graphs/Colors_(ggplot2)/
+
+  library(ggplot2)
+# Default: dark bars
+ggplot(df, aes(x=cond, y=yval)) + geom_bar(stat="identity")
+# Bars with red outlines
+ggplot(df, aes(x=cond, y=yval)) + geom_bar(stat="identity", colour="#FF9999") 
+# Red fill, black outlines
+ggplot(df, aes(x=cond, y=yval)) + geom_bar(stat="identity", fill="#FF9999", colour="black")
+
+
+# Standard black lines and points
+ggplot(df, aes(x=cond, y=yval)) + 
+    geom_line(aes(group=1)) +     # Group all points; otherwise no line will show
+    geom_point(size=3)
+# Dark blue lines, red dots
+ggplot(df, aes(x=cond, y=yval)) + 
+    geom_line(aes(group=1), colour="#000099") +  # Blue lines
+    geom_point(size=3, colour="#CC0000")         # Red dots
+    
+Mapping variable values to colors
+
+# # Bars: x and fill both depend on cond2
+ggplot(df, aes(x=cond, y=yval, fill=cond)) + geom_bar(stat="identity")
+
+# Bars with other dataset; fill depends on cond2
+ggplot(df2, aes(x=cond1, y=yval)) + 
+    geom_bar(aes(fill=cond2),   # fill depends on cond2
+             stat="identity",
+             colour="black",    # Black outline for all
+             position=position_dodge()) # Put bars side-by-side instead of stacked
+ #############            
+             
+#When you have predefined colours you want to use you can set them yourself, using scale_colour_manual()
+```r
+presidential %>%
+  mutate(id = 33 + row_number()) %>%
+  ggplot(aes(start, id, colour = party)) +
+    geom_point() +
+    geom_segment(aes(xend = end, yend = id)) +
+    scale_colour_manual(values = c(Republican = "red", Democratic = "blue"))
+    ```
+# this plot has the segment points (line with a dot in the middle) 
+  # uses geom_segment and manual color scale
+  
+#scale_colour_viridis is the most popular color scale
+
+# how to install this package
+```r
+install.packages('viridis')
+install.packages('hexbin')
+library(viridis)
+library(hexbin)
+
+df <- tibble( # note we're just making a fake dataset so we can plot it
+  x = rnorm(10000),
+  y = rnorm(10000)
+)
+ggplot(df, aes(x, y)) +
+  geom_hex() + # a new geom!
+  coord_fixed()
+
+ggplot(df, aes(x, y)) +
+  geom_hex() +
+  viridis::scale_fill_viridis() +
+  coord_fixed()
+```
+# this graph looks like a hex(honeycomb) with virdiis theme
+
+### Themes
+
+#You can customise the entire themes of your plot. GGPLOT HAS 8 themes by default
+
+```r
+ggplot(mpg, aes(displ, hwy)) +
+  geom_point(aes(color = class)) +
+  geom_smooth(se = FALSE) +
+  theme_bw()
+  ```
+#ggplot has smooth line , color is by class and it has points, theme_bw() = The classic dark-on-light ggplot2 theme. May work better for presentations displayed with a projector.
+
+```r
+ggplot(mpg, aes(displ, hwy)) +
+  geom_point(aes(color = class)) +
+  geom_smooth(se = FALSE) +
+  theme_light()
+  ```
+# just made the border not as thick
+
+```r
+ggplot(mpg, aes(displ, hwy)) +
+  geom_point(aes(color = class)) +
+  geom_smooth(se = FALSE) +
+  theme_classic()
+  ```
+#took out the gridlines, not background
+
+```r
+ggplot(mpg, aes(displ, hwy)) +
+  geom_point(aes(color = class)) +
+  geom_smooth(se = FALSE) +
+  theme_dark()
+  ```
+# makes the gridlines really dark and whole background dark grey
+
+###Saving and exporting your plots
+
+#once developed plot now must save it to disj in some format that allows to import it into your report
+
+#Best way to save is using ggsave() function
+
+#There are two main ways to get your plots out of R using ggplot2. ggsave() will save the most recent plot to your working directory
+
+```r
+ggplot(mpg, aes(displ, hwy)) + geom_point()
+
+ggsave("my-plot.pdf")
+#> Saving 7 x 4.32 in image
+```
+
+
+  
