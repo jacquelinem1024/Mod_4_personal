@@ -1,0 +1,29 @@
+---
+title: "MB5370 MOdule 04: Workshop3 Data Wwrangling"
+author: "Jacqueline Hintz"
+date: "2024-05-16"
+output: html_document
+---
+
+### Data Wrangling in R
+
+The data wrangling component of a data science workflow can often take up to 50-80% of total time one may spend on a project. 
+
+Tibbles: are used in place of the traditional data familiar frames like tidyr package. Tibbles are basically a data frame. They are slightly adjusted dataframes which were designed to keep up with recent advances in R.
+
+In this section, you will be introduced to tidy data and the accompanying tools in the tidyr package. tidyr is part of the core tidyverse, which you should now be quite familiar with. Before starting this section, make sure the tidyverse is loaded.
+
+```r
+library(tidyverse)
+```
+
+why do we care about having tidy data? We said before, tidy data is useful data and here’s why: 
+Having a consistent data structure makes it easier to learn the tools that work with it, and 
+Having your variables in columns allows R to use its ability to work with vectors of values. This makes transforming tidy data a smoother process.
+
+How we make our dataset tidy is by following three interrelated rules. 
+1. Each variable must have its own column.
+2. Each observation must have its own row.
+3. Each value must have its own cell.
+
+
