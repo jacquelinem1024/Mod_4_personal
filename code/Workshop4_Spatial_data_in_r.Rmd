@@ -1,0 +1,6 @@
+---
+title: "Workshop4_Spatial_data_in_r"
+author: "Jacqueline Hintz"
+date: "`r Sys.Date()`"
+output: html_document
+---
