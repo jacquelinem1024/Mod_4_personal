@@ -75,7 +75,7 @@ sdat <- st_as_sf(dat, coords = c("longitude", "latitude"), crs = 4326)
 crs4326 <- st_crs(4326)
 crs4326 #look at the whole CRS
 crs4326$Name #pull out just the name of the crs
-[1] "WGS 84"
+"WGS 84"
 crs4326$wkt # crs in well-known text format
 ```
 
@@ -83,6 +83,157 @@ crs4326$wkt # crs in well-known text format
 ```{r}
 sdat
 ```
+
+#Cartography
+```{r}
+plot(sdat["richness_raw"])
+```
+
+
+
+```{r}
+plot(sdat) #creates panel for every variable on the dataframe.
+```
+
+
+#Thematic maps for communication
+
+```{r}
+#using tmap
+
+map <- tm_shape(sdat) +
+  tm_dots(col = "richness_raw")
+```
+
+#note the tm_dots to plot dots of the cordinates. othe options are tm_polygons, we have chosen "richness_raw" as the color scale 
+#use tmap_save to save the map to your working dirc. 
+
+```{r}
+tmap_save(map, filename = "Richeness-map.png", width = 600, height = 600)
+```
+
+#Mapping spatial polygons as layers
+#Sf package can handle many types of spatail data, inclduing shapes like polygons. To practice with polygons we will load in a map of AUS and a map of AUS's continential shelf using tmap to add to these layers.
+
+#loading shapfiles
+#Unlike the data we just mapped, which was a .csv file with coordinate columns, the polygons in this copepod data are stored as shapefiles. Note that .shp files are generally considered an undesirable file format because they are inefficient at storing data and to save one shapefile you actually create multiple files. This means bits of the file might be lost if you transfer the data somewhere else. Even in GIS software these days, we are moving well away from shapefiles to use other data formats.A better format than shapefile is the Geopackage which can save and compress multiple different data types all in a single file.
+#We are working with shapefiles in this case study because it is still the most likely format you’ll encounter when someone sends you a spatial dataset, but I encourage you to save your personal data in the .gpkg format as you move forward. We can read shapefiles directly into R with the st_read command (which is like read_csv, but for spatial files):
+
+```{r}
+aus <- st_read("data/data-for-course/spatial-data/Aussie/Aussie.shp")
+```
+
+#output:Reading layer `Aussie' from data source 
+#`C:\Users\jacqu\OneDrive\Documents\BC5101_ #Advanced_Genetics_2024\Module_4_Data_science_R\Mod_4_personal\data\data-for-course\spatial-data\Aussie\Aussie.shp' 
+#####using driver `ESRI Shapefile'
+#Simple feature collection with 8 features and 1 field
+#Geometry type: MULTIPOLYGON
+#Dimension:     XY
+#Bounding box:  xmin: 112.9211 ymin: -43.63192 xmax: 153.6389 ymax: -9.229614
+#Geodetic CRS:  WGS 84
+
+```{r}
+shelf <- st_read("data-for-course/spatial-data/aus_shelf/aus_shelf.shp")
+```
+#output: Reading layer `aus_shelf' from data source 
+##`C:\Users\jacqu\OneDrive\Documents\BC5101_ #Advanced_Genetics_2024\Module_4_Data_science_R\Mod_4_personal\data-for-course\spatial-data\aus_shelf\aus_shelf.shp' 
+#  using driver `ESRI Shapefile'
+#Simple feature collection with 1 feature and 1 field
+#Geometry type: MULTIPOLYGON
+#Dimension:     XY
+#Bounding box:  xmin: 112.2242 ymin: -44.1284 xmax: 153.8942 ymax: -8.8798
+#Geodetic CRS:  GRS 1980(IUGG, 1980)
+
+#read aus: 
+#Simple feature collection with 8 features and 1 field
+#Geometry type: MULTIPOLYGON
+#Dimension:     XY
+#Bounding box:  xmin: 112.9211 ymin: -43.63192 xmax: 153.6389 ymax: -9.229614
+#Geodetic CRS:  WGS 84
+#  adm                       geometry
+#1 NSW MULTIPOLYGON (((141.0029 -3...
+#2 Vic MULTIPOLYGON (((140.9659 -3...
+#3 QLD MULTIPOLYGON (((153.5522 -2...
+#4  SA MULTIPOLYGON (((129.0013 -2...
+#5  WA MULTIPOLYGON (((129.0012 -1...
+##6 Tas MULTIPOLYGON (((148.3096 -4...
+#7  NT MULTIPOLYGON (((137.9962 -1...
+#8 ACT MULTIPOLYGON (((149.1253 -3...
+
+
+
+##Mapping polygons
+
+```{r}
+tm_shape(shelf) +
+  tm_polygons()
+```
+#Remember we can make a thematic map by layering it up just as we do for plots in ggplot2. Here we have indicated the shape of our map (shelf) and we have added a command bbox = sdat to expand the extent of the map so it depicts all of our copepod data points. We then add the shape of Australia (aus) on top of the shelf, and finally our copepod data (sdat) in the form of points using tm_dots().
+
+```{r}
+tm_shape(shelf, bbox = sdat) +
+  tm_polygons() +
+  tm_shape(aus) +
+  tm_polygons() +
+  tm_shape(sdat) +
+  tm_dots()
+```
+
+#exploring T_map
+#quick way to style tmap you could use tmap_style("beaver"). This is a similar function to ggplot
+
+
+```{r}
+vignette('tmap-getstarted')
+```
+
+
+
+
+
+```{r}
+library(tidyr)
+shelf <- mutate(shelf,)
+```
+
+
+#Playing with tmap
+
+```{r}
+library(terra)
+```
+# raster data use these packages: terra, raster, and stars
+```{r}
+rsst <- rast('data-for-course/spatial-data/MeanAVHRRSST/MeanAVHRRSST.grd')
+```
+
+NOw plot the raster
+```{r}
+plot(rsst)
+```
+# notethe colour scale isnt that approirate for temp. Green where temp is hot and red where temp is cold. would rather much do one with breks in the colors, for color blind friendly'
+
+```{r}
+tm_shape(rsst) +
+  tm_raster(palette = "-RdBu", title = "SST")
+```
+
+#note the - infront of palette name, which makes the re warmer temperature by revefsing the colour palette.
+
+#Layering raters and points inTmap
+
+#overlayed our copopod sampling points on the map of temperature
+```{r}
+tm_shape(rsst) +
+  tm_raster(palette = "-RdBu", title = "SST") +
+  tm_shape(sdat) +
+  tm_dots(col = "richness_raw", 
+          palette = "Greys",
+          title = "Speices #") +
+  tm_compass()
+```
+
+
 
 
 
