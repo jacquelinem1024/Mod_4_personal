@@ -5,14 +5,15 @@ date: "2024-05-16"
 output: html_document
 ---
 
-Went into Qish website.
+Went into QFish website.
 
-picked the Shark Program nu,ber by caught by area, calender year and species group dataset that offers a data tbale by region, year and species. 
+picked the Shark Program number by caught by area, calender year and species group dataset that offers a data table by region, year and species. 
 
 #Imported QFISH dataset
-
+```{r}
 library(readr)
-> QFISH <- read_csv("data/QFISH.csv")
+QFISH <- read_csv("data/QFISH.csv")
+```
 
 # Tidying Data
 The table has the years along the top if the table and we need them on the sides. We need to pivot the columns and rows to make it tidy
@@ -20,22 +21,22 @@ The table has the years along the top if the table and we need them on the sides
 
 In excel I tidy some of the columns, and rows. I deleted the grand total and fixed some random little things to make sure R can read it.
 
-QFISH <- read_csv("data/QFISH1.csv")
+QFISH <- read_csv("data/QFISH.csv")
 
 
 Now we want to make the rows the columns like catch and calender year 
 Starting with year 2001.
 ```{r}
 yr2001 <- QFISH |> # selected year 2001 first to start with
-  select(Area, starts_with("2001")) # if errors here put yr2001 infront of Area then comma
+  dplyr::select(Area, starts_with("2001")) # if errors here put yr2001 infront of Area then comma
 
 colnames(yr2001) <- unlist(yr2001[1,]) # removes repeated row  (first row- year)
 
 yr2001 <-
   yr2001 |>
-  slice(-1) |> # removes catch row?
-  rename(Area = Catch) |> # replaced Catch header with Area
-  mutate(Year = 2001) # added a year colum
+  slice(-1) |> #removes repeated catch row
+    rename(Area = Catch) |> #replaces the heading catch with area
+  mutate(Year = 2001) #adds the row year and fills with 2001
 ```
 
 Next year 2002
@@ -67,10 +68,40 @@ yr2003 <-
 ```
 
 
+
+
+```{r}
+yr2004 <- QFISH |> # selected year 2001 first to start with
+  select(Area, starts_with("2004")) # if errors here put yr2001 infront of Area then comma
+
+colnames(yr2004) <- unlist(yr2004[1,]) # removes repeated row  (first row- year)
+
+yr2004 <-
+  yr2004 |>
+  slice(-1) |> # removes catch row?
+  rename(Area = Catch) |> # replaced Catch header with Area
+  mutate(Year = 2004)
+```
+
+
+```{r}
+yr2005 <- QFISH |>
+  select(Area, starts_with("2003"))
+
+colnames(yr2005) <- unlist(yr2005[1,])
+ 
+yr2005 <- 
+  yr2005 |> 
+  slice(-1) |>
+  rename(Area = Catch) |>
+  mutate(Year = 2005)
+```
+
+
 Now we need to join the tables. row bind
 ```{r}
 QFISH_new <- 
-  bind_rows(yr2001,yr2002, yr2003)
+  bind_rows(yr2001,yr2002, yr2003, yr2004, yr2005)
 ```
 
 
