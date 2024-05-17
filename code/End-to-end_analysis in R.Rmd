@@ -11,8 +11,10 @@ picked the Shark Program number by caught by area, calender year and species gro
 
 #Imported QFISH dataset
 ```{r}
+library(tidyverse)
 library(readr)
 QFISH <- read_csv("data/QFISH.csv")
+QFISH <- mutate_all(QFISH, ~replace(., is.na(.),0)) #replace n/as with zeros.
 ```
 
 # Tidying Data
@@ -28,7 +30,7 @@ Now we want to make the rows the columns like catch and calender year
 Starting with year 2001.
 ```{r}
 yr2001 <- QFISH |> # selected year 2001 first to start with
-  dplyr::select(Area, starts_with("2001")) # if errors here put yr2001 infront of Area then comma
+  dplyr::select(Area, starts_with("2001")) # if errors here put yr2001 infront of Area then comma,
 
 colnames(yr2001) <- unlist(yr2001[1,]) # removes repeated row  (first row- year)
 
@@ -69,7 +71,7 @@ yr2003 <-
 
 
 
-
+Then 2004
 ```{r}
 yr2004 <- QFISH |> # selected year 2001 first to start with
   select(Area, starts_with("2004")) # if errors here put yr2001 infront of Area then comma
@@ -83,7 +85,7 @@ yr2004 <-
   mutate(Year = 2004)
 ```
 
-
+then 2005.
 ```{r}
 yr2005 <- QFISH |>
   select(Area, starts_with("2003"))
@@ -98,7 +100,7 @@ yr2005 <-
 ```
 
 
-Now we need to join the tables. row bind
+Now we need to join the tables. row binding. 
 ```{r}
 QFISH_new <- 
   bind_rows(yr2001,yr2002, yr2003, yr2004, yr2005)
@@ -108,10 +110,12 @@ QFISH_new <-
 NOw graph the new QFISH Data.
 ```{r}
 ggplot(data = QFISH_new) +
-  geom_point(mapping = aes(x = Year, y = Total, colour = Area))
+  geom_point(mapping = aes(x = Year, y = Total, colour = Area)) + 
+  theme_classic()
 ```
 
 
+#next make it pretty :)
 
 
 
