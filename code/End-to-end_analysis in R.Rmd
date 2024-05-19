@@ -2,32 +2,33 @@
 title: "MB5370:Assesment: End-to-end analysis in R"
 author: "Jacqueline Hintz"
 date: "2024-05-16"
-output: html_document
+output:
+  pdf_document: default
+  html_document: default
 ---
 
-Went into QFish website.
+First Went into QFISH website and downloaded Shark Control Program, and selected the number caught by area, calendar year and species group. 
+This data set was a complete mess when downloading it into a csv and opening it in excel. The table has the years along the top if the table and we need them on the sides. We need to pivot the columns and rows to make it tidy
 
-picked the Shark Program number by caught by area, calender year and species group dataset that offers a data table by region, year and species. 
+In excel I tidied some of the columns, and rows. I deleted the grand total and fixed some random little things to make sure R can read it.
 
 #Imported QFISH dataset
-```{r}
+```r
 library(tidyverse)
 library(readr)
 QFISH <- read_csv("data/QFISH.csv")
-QFISH <- mutate_all(QFISH, ~replace(., is.na(.),0)) #replace n/as with zeros.
+QFISH <- mutate_all(QFISH, ~replace(., is.na(.),0)) # replaced all the N/As with zeros
 ```
 
 # Tidying Data
-The table has the years along the top if the table and we need them on the sides. We need to pivot the columns and rows to make it tidy
 
-
-In excel I tidy some of the columns, and rows. I deleted the grand total and fixed some random little things to make sure R can read it.
-
-QFISH <- read_csv("data/QFISH.csv")
+```{r}
+QFISH <- read_csv("data/QFISH.csv") # have R read the tidied csv from excel that was imported
+```
 
 
 Now we want to make the rows the columns like catch and calender year 
-Starting with year 2001.
+Starting with year 2001. Repeated these steps from 2002-2005.
 ```{r}
 yr2001 <- QFISH |> # selected year 2001 first to start with
   dplyr::select(Area, starts_with("2001")) # if errors here put yr2001 infront of Area then comma,
@@ -43,15 +44,15 @@ yr2001 <-
 
 Next year 2002
 ```{r}
-yr2002 <- QFISH |> # selected year 2002 first to start with
+yr2002 <- QFISH |> 
   select(Area, starts_with("2002"))
 
-colnames(yr2002) <- unlist(yr2002[1,]) # removes repeated row  (first row -year)
+colnames(yr2002) <- unlist(yr2002[1,]) 
 
 yr2002 <-
   yr2002 |>
-  slice(-1) |> # removes catch row?
-  rename(Area = Catch) |> # replaced Catch header with Area
+  slice(-1) |> 
+  rename(Area = Catch) |> 
   mutate(Year = 2002)
 ```
 
@@ -73,19 +74,19 @@ yr2003 <-
 
 Then 2004
 ```{r}
-yr2004 <- QFISH |> # selected year 2001 first to start with
-  select(Area, starts_with("2004")) # if errors here put yr2001 infront of Area then comma
+yr2004 <- QFISH |> 
+  select(Area, starts_with("2004")) 
 
-colnames(yr2004) <- unlist(yr2004[1,]) # removes repeated row  (first row- year)
+colnames(yr2004) <- unlist(yr2004[1,]) 
 
 yr2004 <-
   yr2004 |>
-  slice(-1) |> # removes catch row?
-  rename(Area = Catch) |> # replaced Catch header with Area
+  slice(-1) |> 
+  rename(Area = Catch) |> 
   mutate(Year = 2004)
 ```
 
-then 2005.
+And finally 2005. I know this is not the best solution for this large data set that went all the way to 2023, but it the best one I could come up with. 
 ```{r}
 yr2005 <- QFISH |>
   select(Area, starts_with("2003"))
@@ -107,12 +108,21 @@ QFISH_new <-
 ```
 
 
-NOw graph the new QFISH Data.
+Now graph the new QFISH Data.
 ```{r}
 ggplot(data = QFISH_new) +
   geom_point(mapping = aes(x = Year, y = Total, colour = Area)) + 
   theme_classic()
 ```
+```r
+ggplot(data = QFISH_new) +
+  geom_point(mapping = aes(x = Year, y = Total, colour = Area)) +
+  scale_y_continuous(breaks = c(0,200), limits = c(0,250)) +
+  scale_x_continuous() +
+  theme_classic()
+```
+# the code above need to fix Total coloum and take out the N/A in y axis
+
 
 
 #next make it pretty :)
