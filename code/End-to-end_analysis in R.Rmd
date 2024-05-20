@@ -13,7 +13,7 @@ This data set was a complete mess when downloading it into a csv and opening it 
 In excel I tidied some of the columns, and rows. I deleted the grand total and fixed some random little things to make sure R can read it.
 
 #Imported QFISH dataset
-```r
+```{r}
 library(tidyverse)
 library(readr)
 QFISH <- read_csv("data/QFISH.csv")
@@ -104,9 +104,16 @@ yr2005 <-
 Now we need to join the tables. row binding. 
 ```{r}
 QFISH_new <- 
-  bind_rows(yr2001,yr2002, yr2003, yr2004, yr2005)
+  bind_rows(yr2001,yr2002, yr2003, yr2004, yr2005) |> 
+  mutate(Area = as.factor(Area)) |> #Convert the Area variable to factor ( will be chr otherwise and will not graphg)this just a way to make Area not be affected by next line of code
+  mutate_if(is.character, as.numeric)  # The other vars (apart from 'Year') are  chr so  won't be recognised as numeric if plotted on continuous X or Y axis, so we'll convert
 ```
 
+
+#checking the structure od data before plotting
+```{r}
+glimpse(QFISH_new) # Exactly as required now)
+```
 
 Now graph the new QFISH Data.
 ```{r}
@@ -114,18 +121,15 @@ ggplot(data = QFISH_new) +
   geom_point(mapping = aes(x = Year, y = Total, colour = Area)) + 
   theme_classic()
 ```
-```r
+```{r}
 ggplot(data = QFISH_new) +
   geom_point(mapping = aes(x = Year, y = Total, colour = Area)) +
   scale_y_continuous(breaks = c(0,200), limits = c(0,250)) +
   scale_x_continuous() +
   theme_classic()
 ```
-# the code above need to fix Total coloum and take out the N/A in y axis
 
 
-
-#next make it pretty :)
 
 
 
