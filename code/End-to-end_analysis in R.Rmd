@@ -107,6 +107,13 @@ QFISH_new <-
   bind_rows(yr2001,yr2002, yr2003, yr2004, yr2005) |> 
   mutate(Area = as.factor(Area)) |> #Convert the Area variable to factor ( will be chr otherwise and will not graphg)this just a way to make Area not be affected by next line of code
   mutate_if(is.character, as.numeric)  # The other vars (apart from 'Year') are  chr so  won't be recognised as numeric if plotted on continuous X or Y axis, so we'll convert
+  mutate(Area = as.factor(Area)) |>  # Convert the Area variable to a factor (will be chr otherwise) - this just a way to make Area not be affected by next line of code
+  mutate_if(is.character, as.numeric)  # The other vars (apart from 'Year') are  chr so  won't be recognised as numeric if plotted on continuous X or Y axis, so we'll convert
+```
+
+# Always check structure of data before plotting
+```{r}
+glimpse(QFISH_new) # Exactly as required now
 ```
 
 
@@ -121,6 +128,10 @@ ggplot(data = QFISH_new) +
   geom_point(mapping = aes(x = Year, y = Total, colour = Area)) + 
   theme_classic()
 ```
+
+
+Gives you a warning about 10 rows containing missing values - these are the NAs. They are fine to include - ggplot knows just to omit them from the plot. The warning is just to give you a heads-up in case you thought this wasn't going to happen. e.g. if you thought you'd replaced the NAs with 0s. But as long as you always check your data before plotting (e.g. glimpse above), you should know about this already!
+
 ```{r}
 ggplot(data = QFISH_new) +
   geom_point(mapping = aes(x = Year, y = Total, colour = Area)) +
