@@ -129,7 +129,7 @@ ggplot(data = QFISH_new) +
   theme_classic()
 ```
 
-
+#Final gragh with out the N/A on y-axis
 
 
 
