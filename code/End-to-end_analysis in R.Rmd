@@ -13,15 +13,15 @@ This data set was a complete mess when downloading it into a csv and opening it 
 In excel I tidied some of the columns, and rows. I deleted the grand total and fixed some random little things to make sure R can read it.
 
 #Imported QFISH dataset
-```{r}
+```r
 library(tidyverse)
 library(readr)
 QFISH <- read_csv("data/QFISH.csv")
 QFISH <- mutate_all(QFISH, ~replace(., is.na(.),0)) # replaced all the N/As with zeros
 ```
 
-# Tidying Data
 
+# Tidying Data
 ```{r}
 QFISH <- read_csv("data/QFISH.csv") # have R read the tidied csv from excel that was imported
 ```
@@ -42,7 +42,7 @@ yr2001 <-
   mutate(Year = 2001) #adds the row year and fills with 2001
 ```
 
-Next year 2002
+#Next year 2002
 ```{r}
 yr2002 <- QFISH |> 
   select(Area, starts_with("2002"))
@@ -56,7 +56,7 @@ yr2002 <-
   mutate(Year = 2002)
 ```
 
-Then 2003
+#Then 2003
 ```{r}
 yr2003 <- QFISH |>
   select(Area, starts_with("2003"))
@@ -72,7 +72,7 @@ yr2003 <-
 
 
 
-Then 2004
+#Then 2004
 ```{r}
 yr2004 <- QFISH |> 
   select(Area, starts_with("2004")) 
@@ -86,7 +86,7 @@ yr2004 <-
   mutate(Year = 2004)
 ```
 
-And finally 2005. I know this is not the best solution for this large data set that went all the way to 2023, but it the best one I could come up with. 
+#And finally 2005. I know this is not the best solution for this large data set that went all the way to 2023, but it the best one I could come up with. 
 ```{r}
 yr2005 <- QFISH |>
   select(Area, starts_with("2003"))
@@ -101,7 +101,7 @@ yr2005 <-
 ```
 
 
-Now we need to join the tables. row binding. 
+#Now we need to join the tables. row binding. 
 ```{r}
 QFISH_new <- 
   bind_rows(yr2001,yr2002, yr2003, yr2004, yr2005) |> 
@@ -122,7 +122,7 @@ glimpse(QFISH_new) # Exactly as required now
 glimpse(QFISH_new) # Exactly as required now)
 ```
 
-Now graph the new QFISH Data.
+#Now graph the new QFISH Data.
 ```{r}
 ggplot(data = QFISH_new) +
   geom_point(mapping = aes(x = Year, y = Total, colour = Area)) + 
@@ -130,7 +130,7 @@ ggplot(data = QFISH_new) +
 ```
 
 
-Gives you a warning about 10 rows containing missing values - these are the NAs. They are fine to include - ggplot knows just to omit them from the plot. The warning is just to give you a heads-up in case you thought this wasn't going to happen. e.g. if you thought you'd replaced the NAs with 0s. But as long as you always check your data before plotting (e.g. glimpse above), you should know about this already!
+#Gives you a warning about 10 rows containing missing values - these are the NAs. They are fine to include - ggplot knows just to omit them from the plot. The warning is just to give you a heads-up in case you thought this wasn't going to happen. e.g. if you thought you'd replaced the NAs with 0s. But as long as you always check your data before plotting (e.g. glimpse above), you should know about this already!
 
 ```{r}
 ggplot(data = QFISH_new) +
