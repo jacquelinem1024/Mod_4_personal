@@ -27,8 +27,8 @@ QFISH <- read_csv("data/QFISH.csv") # have R read the tidied csv from excel that
 ```
 
 
-Now we want to make the rows the columns like catch and calender year 
-Starting with year 2001. Repeated these steps from 2002-2005.
+#Now we want to make the rows the columns like catch and calender year 
+#Starting with year 2001. Repeated these steps from 2002-2005.
 ```{r}
 yr2001 <- QFISH |> # selected year 2001 first to start with
   dplyr::select(Area, starts_with("2001")) # if errors here put yr2001 infront of Area then comma,
